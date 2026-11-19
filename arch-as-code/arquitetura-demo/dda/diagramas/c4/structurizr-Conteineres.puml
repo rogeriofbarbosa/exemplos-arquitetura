@@ -1,0 +1,126 @@
+@startuml
+title <size:24>Container View: Plataforma Exemplo</size>\n<size:24>Os cinco contêineres e quem os usa. As integrações externas estão na visão Integracoes.</size>
+
+set separator none
+left to right direction
+skinparam ranksep 40
+skinparam nodesep 12
+hide stereotype
+
+skinparam {
+  nodesep 40
+  ranksep 90
+}
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element,Container
+  .Element-RWxlbWVudCxDb250YWluZXI= {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Banco
+  .Element-RWxlbWVudCxDb250YWluZXIsQmFuY28= {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Movel
+  .Element-RWxlbWVudCxDb250YWluZXIsTW92ZWw= {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Navegador
+  .Element-RWxlbWVudCxDb250YWluZXIsTmF2ZWdhZG9y {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Person
+  .Element-RWxlbWVudCxQZXJzb24= {
+    BackgroundColor: #1f3a5f;
+    LineColor: #152842;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+    MaximumWidth: 200;
+  }
+  // Plataforma Exemplo
+  .Boundary-UGxhdGFmb3JtYSBFeGVtcGxv {
+    BackgroundColor: #ffffff;
+    LineColor: #204764;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+</style>
+
+person "==Gestor do cliente\n<size:16>[Person]</size>\n\nAdministra a conta da empresa cliente: estrutura, usuários e ciclos de trabalho." <<Element-RWxlbWVudCxQZXJzb24=>> as Gestordocliente
+person "==Analista\n<size:16>[Person]</size>\n\nConduz a análise e acompanha os planos." <<Element-RWxlbWVudCxQZXJzb24=>> as Analista
+person "==Leitor executivo\n<size:16>[Person]</size>\n\nLê painéis e relatórios." <<Element-RWxlbWVudCxQZXJzb24=>> as Leitorexecutivo
+person "==Administrador da plataforma\n<size:16>[Person]</size>\n\nOperação da plataforma (todas as contas)." <<Element-RWxlbWVudCxQZXJzb24=>> as Administradordaplataforma
+person "==Participante\n<size:16>[Person]</size>\n\nResponde às coletas pelo app móvel, a partir de um convite." <<Element-RWxlbWVudCxQZXJzb24=>> as Participante
+
+rectangle "Plataforma Exemplo\n<size:16>[Software System]</size>" <<Boundary-UGxhdGFmb3JtYSBFeGVtcGxv>> {
+  rectangle "==Serviço de relatórios\n<size:16>[Container: Python, FastAPI]</size>\n\nRenderiza PDFs a partir dos dados que a API monta. Roda na mesma imagem da API, em porta interna." <<Element-RWxlbWVudCxDb250YWluZXI=>> as PlataformaExemplo.Serviçoderelatórios
+  database "==Banco de dados\n<size:16>[Container: PostgreSQL]</size>\n\nSistema de registro. Isolamento por tenant com Row-Level Security; trilha de auditoria append-only." <<Element-RWxlbWVudCxDb250YWluZXIsQmFuY28=>> as PlataformaExemplo.Bancodedados
+  rectangle "==Painel web\n<size:16>[Container: React, Vite, TypeScript]</size>\n\nTelas dos papéis da empresa cliente e do administrador. Servido como site estático por CDN." <<Element-RWxlbWVudCxDb250YWluZXIsTmF2ZWdhZG9y>> as PlataformaExemplo.Painelweb
+  rectangle "==App móvel\n<size:16>[Container: Flutter, Dart]</size>\n\nResponde às coletas; abre pelo link do convite (deep link)." <<Element-RWxlbWVudCxDb250YWluZXIsTW92ZWw=>> as PlataformaExemplo.Appmóvel
+  rectangle "==API\n<size:16>[Container: Node.js, TypeScript, ORM]</size>\n\nAutenticação, regras de negócio, isolamento por tenant, integrações e montagem dos dados dos relatórios." <<Element-RWxlbWVudCxDb250YWluZXI=>> as PlataformaExemplo.API
+}
+
+Gestordocliente --> PlataformaExemplo.Painelweb <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Analista --> PlataformaExemplo.Painelweb <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Leitorexecutivo --> PlataformaExemplo.Painelweb <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Administradordaplataforma --> PlataformaExemplo.Painelweb <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Participante --> PlataformaExemplo.Appmóvel <<Relationship-UmVsYXRpb25zaGlw>> : "Responde pelo convite\n<size:16>[Deep link]</size>"
+PlataformaExemplo.Painelweb --> PlataformaExemplo.API <<Relationship-UmVsYXRpb25zaGlw>> : "Chama\n<size:16>[JSON sobre HTTPS]</size>"
+PlataformaExemplo.Appmóvel --> PlataformaExemplo.API <<Relationship-UmVsYXRpb25zaGlw>> : "Chama\n<size:16>[JSON sobre HTTPS]</size>"
+PlataformaExemplo.API --> PlataformaExemplo.Bancodedados <<Relationship-UmVsYXRpb25zaGlw>> : "Lê e escreve\n<size:16>[SQL, com RLS]</size>"
+PlataformaExemplo.API --> PlataformaExemplo.Serviçoderelatórios <<Relationship-UmVsYXRpb25zaGlw>> : "Pede o PDF\n<size:16>[HTTP interno]</size>"
+
+@enduml

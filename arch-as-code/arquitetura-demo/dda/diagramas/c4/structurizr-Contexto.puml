@@ -1,0 +1,104 @@
+@startuml
+title <size:24>System Context View: Plataforma Exemplo</size>\n<size:24>Quem usa a Plataforma Exemplo e com que sistemas externos ela fala. Tracejado: planejado.</size>
+
+set separator none
+left to right direction
+skinparam ranksep 40
+skinparam nodesep 12
+hide stereotype
+
+skinparam {
+  nodesep 40
+  ranksep 90
+}
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element,Person
+  .Element-RWxlbWVudCxQZXJzb24= {
+    BackgroundColor: #1f3a5f;
+    LineColor: #152842;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0= {
+    BackgroundColor: #2f6690;
+    LineColor: #204764;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System,Externo
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw== {
+    BackgroundColor: #8d99ae;
+    LineColor: #626b79;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System,Externo,Futuro
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubyxGdXR1cm8= {
+    BackgroundColor: #8d99ae;
+    LineColor: #626b79;
+    LineStyle: 10-10;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+    MaximumWidth: 200;
+  }
+</style>
+
+person "==Gestor do cliente\n<size:16>[Person]</size>\n\nAdministra a conta da empresa cliente: estrutura, usuários e ciclos de trabalho." <<Element-RWxlbWVudCxQZXJzb24=>> as Gestordocliente
+person "==Analista\n<size:16>[Person]</size>\n\nConduz a análise e acompanha os planos." <<Element-RWxlbWVudCxQZXJzb24=>> as Analista
+rectangle "==Provedor de mensageria\n<size:16>[Software System]</size>\n\nCanal de conversa com os usuários (chat). O número é transporte, não identidade." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw==>> as Provedordemensageria
+rectangle "==Provedor de e-mail\n<size:16>[Software System]</size>\n\nE-mail transacional (convites, avisos)." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw==>> as Provedordeemail
+rectangle "==Armazenamento de objetos\n<size:16>[Software System]</size>\n\nArquivos e evidências por tenant." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw==>> as Armazenamentodeobjetos
+rectangle "==Provedor de IA\n<size:16>[Software System]</size>\n\nModelo de linguagem e transcrição de voz, atrás de uma porta (adaptador trocável)." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw==>> as ProvedordeIA
+rectangle "==Provedor de identidade corporativa\n<size:16>[Software System]</size>\n\nSSO da empresa cliente (OIDC ou SAML). Planejado; ainda não integrado no exemplo." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubyxGdXR1cm8=>> as Provedordeidentidadecorporativa
+person "==Leitor executivo\n<size:16>[Person]</size>\n\nLê painéis e relatórios." <<Element-RWxlbWVudCxQZXJzb24=>> as Leitorexecutivo
+person "==Administrador da plataforma\n<size:16>[Person]</size>\n\nOperação da plataforma (todas as contas)." <<Element-RWxlbWVudCxQZXJzb24=>> as Administradordaplataforma
+person "==Participante\n<size:16>[Person]</size>\n\nResponde às coletas pelo app móvel, a partir de um convite." <<Element-RWxlbWVudCxQZXJzb24=>> as Participante
+rectangle "==Plataforma Exemplo\n<size:16>[Software System]</size>\n\nPlataforma B2B multi-tenant: coleta de dados, análise, planos de ação e relatórios em PDF." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0=>> as PlataformaExemplo
+
+Gestordocliente --> PlataformaExemplo <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Analista --> PlataformaExemplo <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Leitorexecutivo --> PlataformaExemplo <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Administradordaplataforma --> PlataformaExemplo <<Relationship-UmVsYXRpb25zaGlw>> : "Usa\n<size:16>[HTTPS]</size>"
+Participante --> PlataformaExemplo <<Relationship-UmVsYXRpb25zaGlw>> : "Responde pelo convite\n<size:16>[Deep link]</size>"
+Gestordocliente --> Provedordemensageria <<Relationship-UmVsYXRpb25zaGlw>> : "Conversa com o assistente\n<size:16>[Chat]</size>"
+PlataformaExemplo --> Provedordemensageria <<Relationship-UmVsYXRpb25zaGlw>> : "Envia mensagens\n<size:16>[API REST]</size>"
+Provedordemensageria --> PlataformaExemplo <<Relationship-UmVsYXRpb25zaGlw>> : "Entrega as mensagens recebidas\n<size:16>[Webhook]</size>"
+PlataformaExemplo --> Provedordeemail <<Relationship-UmVsYXRpb25zaGlw>> : "Envia e-mail\n<size:16>[HTTPS]</size>"
+PlataformaExemplo --> Armazenamentodeobjetos <<Relationship-UmVsYXRpb25zaGlw>> : "Guarda e lê arquivos\n<size:16>[SDK]</size>"
+PlataformaExemplo --> ProvedordeIA <<Relationship-UmVsYXRpb25zaGlw>> : "Chama o modelo e transcreve voz\n<size:16>[HTTPS]</size>"
+PlataformaExemplo --> Provedordeidentidadecorporativa <<Relationship-UmVsYXRpb25zaGlw>> : "Federa a autenticação (planejado)\n<size:16>[OIDC]</size>"
+
+@enduml

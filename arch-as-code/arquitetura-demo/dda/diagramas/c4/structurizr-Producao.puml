@@ -1,0 +1,159 @@
+@startuml
+title <size:24>Deployment View: Plataforma Exemplo - Producao</size>\n<size:24>Onde cada contêiner roda em produção (topologia genérica).</size>
+
+set separator none
+left to right direction
+skinparam ranksep 40
+skinparam nodesep 12
+hide stereotype
+
+skinparam {
+  nodesep 40
+  ranksep 90
+}
+
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element
+  .Element-RWxlbWVudA== {
+    BackgroundColor: #ffffff;
+    LineColor: #444444;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #444444;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container
+  .Element-RWxlbWVudCxDb250YWluZXI= {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Banco
+  .Element-RWxlbWVudCxDb250YWluZXIsQmFuY28= {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Movel
+  .Element-RWxlbWVudCxDb250YWluZXIsTW92ZWw= {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Container,Navegador
+  .Element-RWxlbWVudCxDb250YWluZXIsTmF2ZWdhZG9y {
+    BackgroundColor: #3a7ca5;
+    LineColor: #285673;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Software System,Externo
+  .Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw== {
+    BackgroundColor: #8d99ae;
+    LineColor: #626b79;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+    MaximumWidth: 200;
+  }
+  // Element
+  .DeploymentNode-RWxlbWVudA== {
+    BackgroundColor: #ffffff;
+    LineColor: #444444;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #444444;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+  }
+</style>
+
+rectangle "Navegador do usuário\n<size:16>[Deployment Node: Chrome, Safari, Firefox]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Navegadordousuário {
+  rectangle "==Painel web\n<size:16>[Container: React, Vite, TypeScript]</size>\n\nTelas dos papéis da empresa cliente e do administrador. Servido como site estático por CDN." <<Element-RWxlbWVudCxDb250YWluZXIsTmF2ZWdhZG9y>> as Producao.Navegadordousuário.Painelweb_1
+}
+
+rectangle "Aparelho do participante\n<size:16>[Deployment Node: Android ou iOS]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Aparelhodoparticipante {
+  rectangle "==App móvel\n<size:16>[Container: Flutter, Dart]</size>\n\nResponde às coletas; abre pelo link do convite (deep link)." <<Element-RWxlbWVudCxDb250YWluZXIsTW92ZWw=>> as Producao.Aparelhodoparticipante.Appmóvel_1
+}
+
+rectangle "Borda\n<size:16>[Deployment Node: CDN e DNS]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Borda {
+  rectangle "==CDN / hospedagem estática\n<size:16>[Infrastructure Node: CDN]</size>\n\nServe o bundle do painel e os arquivos de verificação do deep link." <<Element-RWxlbWVudA==>> as Producao.Borda.CDNhospedagemestática
+  rectangle "==DNS\n<size:16>[Infrastructure Node: DNS gerenciado]</size>\n\nResolve os domínios do painel e da API." <<Element-RWxlbWVudA==>> as Producao.Borda.DNS
+}
+
+rectangle "Provedor de nuvem\n<size:16>[Deployment Node: Nuvem pública]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Provedordenuvem {
+  rectangle "Serviço gerenciado de contêineres\n<size:16>[Deployment Node: Containers gerenciados]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Provedordenuvem.Serviçogerenciadodecontêineres {
+    rectangle "Imagem da aplicação\n<size:16>[Deployment Node: Docker]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação {
+      rectangle "==API\n<size:16>[Container: Node.js, TypeScript, ORM]</size>\n\nAutenticação, regras de negócio, isolamento por tenant, integrações e montagem dos dados dos relatórios." <<Element-RWxlbWVudCxDb250YWluZXI=>> as Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1
+      rectangle "==Serviço de relatórios\n<size:16>[Container: Python, FastAPI]</size>\n\nRenderiza PDFs a partir dos dados que a API monta. Roda na mesma imagem da API, em porta interna." <<Element-RWxlbWVudCxDb250YWluZXI=>> as Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.Serviçoderelatórios_1
+    }
+
+  }
+
+  rectangle "PostgreSQL gerenciado\n<size:16>[Deployment Node: PostgreSQL gerenciado]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Provedordenuvem.PostgreSQLgerenciado {
+    database "==Banco de dados\n<size:16>[Container: PostgreSQL]</size>\n\nSistema de registro. Isolamento por tenant com Row-Level Security; trilha de auditoria append-only." <<Element-RWxlbWVudCxDb250YWluZXIsQmFuY28=>> as Producao.Provedordenuvem.PostgreSQLgerenciado.Bancodedados_1
+  }
+
+  rectangle "Bastion\n<size:16>[Deployment Node: VM Linux]</size>" <<DeploymentNode-RWxlbWVudA==>> as Producao.Provedordenuvem.Bastion {
+    rectangle "==Túnel SSH\n<size:16>[Infrastructure Node: SSH]</size>\n\nAbre uma porta local apontando para o banco." <<Element-RWxlbWVudA==>> as Producao.Provedordenuvem.Bastion.TúnelSSH
+  }
+
+  rectangle "==Armazenamento de objetos\n<size:16>[Software System]</size>\n\nArquivos e evidências por tenant." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw==>> as Producao.Provedordenuvem.Armazenamentodeobjetos_1
+  rectangle "==Provedor de IA\n<size:16>[Software System]</size>\n\nModelo de linguagem e transcrição de voz, atrás de uma porta (adaptador trocável)." <<Element-RWxlbWVudCxTb2Z0d2FyZSBTeXN0ZW0sRXh0ZXJubw==>> as Producao.Provedordenuvem.ProvedordeIA_1
+}
+
+Producao.Navegadordousuário.Painelweb_1 --> Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Chama\n<size:16>[JSON sobre HTTPS]</size>"
+Producao.Aparelhodoparticipante.Appmóvel_1 --> Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Chama\n<size:16>[JSON sobre HTTPS]</size>"
+Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 --> Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.Serviçoderelatórios_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Pede o PDF\n<size:16>[HTTP interno]</size>"
+Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 --> Producao.Provedordenuvem.PostgreSQLgerenciado.Bancodedados_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Lê e escreve\n<size:16>[SQL, com RLS]</size>"
+Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 --> Producao.Provedordenuvem.Armazenamentodeobjetos_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Guarda e lê arquivos\n<size:16>[SDK]</size>"
+Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 --> Producao.Provedordenuvem.ProvedordeIA_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Chama o modelo e transcreve voz\n<size:16>[HTTPS]</size>"
+Producao.Borda.CDNhospedagemestática --> Producao.Navegadordousuário.Painelweb_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Entrega o bundle\n<size:16>[HTTPS]</size>"
+Producao.Borda.DNS --> Producao.Borda.CDNhospedagemestática <<Relationship-UmVsYXRpb25zaGlw>> : "Aponta o domínio do painel\n<size:16>[DNS]</size>"
+Producao.Borda.DNS --> Producao.Provedordenuvem.Serviçogerenciadodecontêineres.Imagemdaaplicação.API_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Aponta o domínio da API\n<size:16>[DNS]</size>"
+Producao.Provedordenuvem.Bastion.TúnelSSH --> Producao.Provedordenuvem.PostgreSQLgerenciado.Bancodedados_1 <<Relationship-UmVsYXRpb25zaGlw>> : "Acesso de operação manual\n<size:16>[SSH]</size>"
+
+@enduml

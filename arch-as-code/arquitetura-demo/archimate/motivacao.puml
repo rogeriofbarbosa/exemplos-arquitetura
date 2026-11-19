@@ -1,0 +1,43 @@
+' Visão de Motivação (ArchiMate 3.2) da Plataforma Exemplo (sistema fictício).
+'
+' Fonte de verdade: ESTE arquivo. O SVG em ../dda/diagramas/archimate/ é saída de build
+' (scripts/gerar-diagramas.sh).
+'
+' Regra de leitura: a biblioteca ArchiMate do PlantUML desenha, não modela. Ela NÃO valida as
+' regras de relacionamento da especificação 3.2; quem revisa confere contra o Apêndice B dela.
+@startuml motivacao
+!include <archimate/Archimate>
+
+title Motivação: o que move a Plataforma Exemplo
+
+Motivation_Stakeholder(stkCliente, "Empresa cliente\n(gestor, analista, executivo)")
+Motivation_Stakeholder(stkParticipante, "Participante")
+Motivation_Stakeholder(stkAuditor, "Auditor externo")
+
+Motivation_Driver(drvRegulacao, "Regulação setorial:\nprovar o que foi feito")
+Motivation_Driver(drvLgpd, "LGPD: dado pessoal\ne confidencialidade da resposta")
+
+Motivation_Goal(goalRastreavel, "Documentos rastreáveis\ne verificáveis")
+Motivation_Goal(goalConfidencial, "Participação confidencial")
+
+Motivation_Requirement(reqRls, "Isolamento por cliente\nexercido no banco (RLS)")
+Motivation_Requirement(reqTrilha, "Trilha de auditoria\nappend-only")
+Motivation_Requirement(reqPiso, "Agregação só com\npiso mínimo de participantes")
+
+Motivation_Principle(prinVerificar, "Verificar, não inferir")
+
+Rel_Association(stkCliente, drvRegulacao)
+Rel_Association(stkAuditor, drvRegulacao)
+Rel_Association(stkParticipante, drvLgpd)
+Rel_Influence(drvRegulacao, goalRastreavel)
+Rel_Influence(drvLgpd, goalConfidencial)
+Rel_Realization(reqTrilha, goalRastreavel)
+Rel_Realization(reqRls, goalConfidencial)
+Rel_Realization(reqPiso, goalConfidencial)
+Rel_Influence(prinVerificar, reqTrilha)
+
+legend right
+  Exemplo. Cada elemento ganha, no DDA, a referência
+  ao requisito, ao teste ou ao código que o sustenta.
+endlegend
+@enduml
